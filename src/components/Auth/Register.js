@@ -9,14 +9,12 @@ class Register extends React.Component {
         username: '',
         email: '',
         password: '',
-        passwordConvirmation: '',
-        errors: [],
-        loading: false
+        passwordConfirmation: '',
     };
 
-    isFormValid = () => {
-        let errors = [];
-        let error;
+    AddUser = event => {
+        let newUser = firebase.auth().currentUser()
+        firebase.firestore().add({name: this.state.username, userId: newUser.uid})
     }
 
     handleChange = event => {
@@ -25,23 +23,18 @@ class Register extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        if (this.isFormValid()) {
-            this.setState({ errors: [], loading: true});
         firebase
             .auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(createdUser => {
                 console.log(createdUser);
-                this.setState({ loading:false})
+                this.AddUser()
             })
             .catch(err => {
                 console.error(err);
-                this.setState({loading: false})
             })
         }
-    }
-
-    handleChange
+    
     
     render() {
         const { username, email, password, passwordConfirmation} = this.state;
